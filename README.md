@@ -1,4 +1,4 @@
-# hello-world
+# Vue-RND-project
 
 ## Project setup
 ```
