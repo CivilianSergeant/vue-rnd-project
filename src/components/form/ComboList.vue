@@ -1,7 +1,7 @@
 <template>
-
-    <div>
-        <TextInput ref="combo-input" @typed="handleTyped" :text="text" :height="height" :width="width"/>
+    <div v-if="showComboList">
+        <PageTitle :text="'List of Groups'"/>
+        <TextInput ref="combo-input" :placeholder="'Search'" :autofocus="'autofocus'" @typed="handleTyped" :text="text" :height="height" :width="width"/>
         <ul class="combo-list" ref="list">
             <li @keyup="handleKeyUp" @click="handleClickSelectItem(item)" v-for="(item,$index) in filteredData" :ref="'li-'+$index" :tabindex="$index" :key="item.id">{{item.name}}</li>
         </ul>
@@ -9,13 +9,16 @@
 </template>
 <script>
 import TextInputVue from './TextInput.vue';
+import PageTitle from './PageTitle.vue';
 export default {
     name: 'ComboList',
     components:{
-        'TextInput':TextInputVue
+        'TextInput':TextInputVue,
+        'PageTitle':PageTitle
     },
     data: ()=>{
         return {
+            showComboList:false,
             width:99,
             height:20,
             selectedItemIndex:0,
@@ -42,6 +45,7 @@ export default {
     },
     mounted:function(){
         this.filteredData = this.data;
+        this.$root.eventObserver.register({'ComboList':this})
     },
     methods:{
         handleTyped:function(val){
@@ -95,6 +99,9 @@ export default {
     margin: 0px;
     padding: 0px;
     list-style: none;
+}
+.combo-list li{
+    background-color:#cfffef;
 }
 .combo-list li:focus{
     background-color:darkslategray;
