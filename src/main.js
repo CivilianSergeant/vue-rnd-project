@@ -15,7 +15,8 @@ Vue.mixin({
     return {
       eventObserver
     };
-  }});
+  }
+});
 
 
 Vue.config.productionTip = true

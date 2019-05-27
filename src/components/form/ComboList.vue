@@ -1,9 +1,9 @@
 <template>
     <div v-if="showComboList">
         <PageTitle :text="'List of Groups'"/>
-        <TextInput ref="combo-input" :placeholder="'Search'" :autofocus="'autofocus'" @typed="handleTyped" :text="text" :height="height" :width="width"/>
+        <TextInput :ref="'combo-search-input'" :placeholder="'Search'" :autofocus="'autofocus'" @typed="handleTyped" :text="text" :height="height" :width="width"/>
         <ul class="combo-list" ref="list">
-            <li @keyup="handleKeyUp" @click="handleClickSelectItem(item)" v-for="(item,$index) in filteredData" :ref="'li-'+$index" :tabindex="$index" :key="item.id">{{item.name}}</li>
+            <li @keyup="handleKeyUp" @dblclick="handleDoubleClickSelectItem(item)" @click="handleClickSelectItem(item)" v-for="(item,$index) in filteredData" :ref="'li-'+$index" :tabindex="$index" :key="item.id">{{item.name}}</li>
         </ul>
     </div>
 </template>
@@ -45,7 +45,10 @@ export default {
     },
     mounted:function(){
         this.filteredData = this.data;
-        this.$root.eventObserver.register({'ComboList':this})
+        this.$root.eventObserver.register({'ComboList':this});
+        this.$root.eventObserver.subscribe('ComboList',(obj,option,value)=>{
+            this.showComboList = value;
+        });
     },
     methods:{
         handleTyped:function(val){
@@ -74,7 +77,14 @@ export default {
         },
         handleClickSelectItem:function(item){
             this.text = item.name;
-            // console.log(item.name);
+            this.selectedItemIndex = this.filteredData.indexOf(item);
+        },
+        handleDoubleClickSelectItem(item){
+            this.text = item.name;
+            this.$root.eventObserver.broadcast('ComboInput','combo',item);
+            
+            this.selectedItemIndex = this.filteredData.indexOf(item);
+            this.$refs['combo-search-input'].$el.children[0].focus();
         },
         handleKeyUp:function(e){
             if(e.keyCode==40){
