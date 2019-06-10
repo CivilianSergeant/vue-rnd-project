@@ -1,6 +1,6 @@
 <template>
     <div class="input-group">
-        <label>Group Name</label>
+        <label>{{label}}</label>
         <TextInput v-if="showTextInput()" :autofocus="autofocus" :placeholder="'N/A'"/>
         <ComboInput v-if="showComboInput()"/>
     </div>
@@ -22,7 +22,7 @@ export default {
             FileInputType:FileInputType
         }
     },
-    props:['type','autofocus'],
+    props:['label','type','autofocus'],
     methods:{
         showTextInput:function(){
             return (this.type==this.FileInputType.TextInput);

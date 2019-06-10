@@ -1,7 +1,7 @@
 <template>
     <div v-if="showComboList">
         <PageTitle :text="'List of Groups'"/>
-        <TextInput :ref="'combo-search-input'" :placeholder="'Search'" :autofocus="'autofocus'" @typed="handleTyped" :text="text" :height="height" :width="width"/>
+        <TextInput :ref="'combo-search-input'" :focusstyle="'black'" :placeholder="'Search'" :autofocus="autofocus" @typed="handleTyped" :text="text" :height="height" :width="width"/>
         <ul class="combo-list" ref="list">
             <li @keyup="handleKeyUp" @dblclick="handleDoubleClickSelectItem(item)" @click="handleClickSelectItem(item)" v-for="(item,$index) in filteredData" :ref="'li-'+$index" :tabindex="$index" :key="item.id">{{item.name}}</li>
         </ul>
@@ -19,6 +19,7 @@ export default {
     data: ()=>{
         return {
             showComboList:false,
+            autofocus:true,
             width:99,
             height:20,
             selectedItemIndex:0,
@@ -48,6 +49,13 @@ export default {
         this.$root.eventObserver.register({'ComboList':this});
         this.$root.eventObserver.subscribe('ComboList',(obj,option,value)=>{
             this.showComboList = value;
+            setTimeout(()=>{
+                if(this.$refs['combo-search-input']){
+                    this.$refs['combo-search-input'].$el.children[0].focus()
+                }
+               
+            },250);
+            
         });
     },
     methods:{
@@ -99,6 +107,11 @@ export default {
                     this.text = this.filteredData[this.selectedItemIndex].name;
                     e.srcElement.previousSibling.focus();
                 }
+            }else if(e.keyCode == 13){
+                let item = this.filteredData[this.selectedItemIndex];
+                
+                this.$root.eventObserver.broadcast('ComboInput','combo',item);
+                this.$root.eventObserver.broadcast('ComboList','showComboList',false);
             }
         }
     }

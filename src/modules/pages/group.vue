@@ -2,24 +2,30 @@
     <div class="groups" @keyup="handleKeyUp">
         <PageTitle :text="title"/>
         <div class="row" >
-            <FormInput :type="FormInputType.TextInput" :autofocus="'autofocus'"/>
-            <FormInput :ref="'ComboInput'" :type="FormInputType.ComboInput" />
+            <FormInput :label="label1" :type="FormInputType.TextInput" :autofocus="'autofocus'"/>
+            <FormInput :label="label2" :ref="'ComboInput'" :type="FormInputType.ComboInput" />
         </div>
+        <ConfirmDialog :show="showConfirm" @handleYes="handleYes" @handleNo="handleNo"/>
     </div>
 </template>
 <script>
 import PageTitle from '../../components/form/PageTitle.vue';
 import FormInput from '../../components/form/FormInput.vue';
+import ConfirmDialog from '../../components/form/ConfirmDialog.vue';
 import FormInputType from '../../helpers/FormInputType.js';
 export default {
     name: 'Group',
     components:{
         'PageTitle':PageTitle,
-        'FormInput':FormInput
+        'FormInput':FormInput,
+        'ConfirmDialog': ConfirmDialog
     },
     data:()=>{
         return{
             title:'Group',
+            label1:'Group Name',
+            label2:'Parent Group',
+            showConfirm:false,
             autofocus:'autofocus',
             FormInputType:FormInputType
         };
@@ -28,6 +34,14 @@ export default {
 
     },
     methods:{
+        handleYes(res){
+            return res;
+            // console.log(res);
+        },
+        handleNo(res){
+            return res;
+            // console.log(res);
+        },
         handleKeyUp(e){
             
             if(e.keyCode == 13 || e.keyCode == 40){

@@ -1,7 +1,6 @@
 <template>
     <div class="text-input-container">
-        <input class="text-input" :style="cssClasses()" :autofocus="autofocus" :placeholder="placeholder"  @keyup="handleTyped" v-model="textValue"/>
-        
+        <input :class="cssClasses()" :style="customStyles()" :autofocus="autofocus" :placeholder="placeholder"  @keyup="handleTyped" v-model="textValue"/>
     </div>
 </template>
 <script>
@@ -12,15 +11,18 @@ export default {
             textValue:''
         };
     },
-    props:['width','height','text','placeholder','autofocus'],
+    props:['width','focusstyle','height','text','placeholder','autofocus'],
     watch:{
         text:function(){
             this.textValue = this.text;
         }
     },
     methods:{
-        cssClasses(){
+        customStyles(){
             return 'width:'+this.width+'%; height:'+this.height+'px;';
+        },
+        cssClasses(){
+            return (this.focusstyle)? this.focusstyle : 'text-input';
         },
         handleTyped:function(e){
             
@@ -49,5 +51,19 @@ export default {
         border:1px solid #555;
         background-color: aquamarine;
     }
+
+    .black{
+        border:none;
+        background-color:#333;
+        border:1px solid #333;
+        color:#fff;
+    }
+    .black:focus{
+        outline: none;
+        border:1px solid #333;
+        background-color: #333;
+        color:#fff;
+    }
+
 </style>
 
